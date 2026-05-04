@@ -8,7 +8,7 @@ __pycache__/
 *.pyc
 
 # Data & Models (Too large for GitHub)
-*.txt
+KDDTrain+.txt
 *.csv
 model/model.pkl
 model/encoders.pkl
