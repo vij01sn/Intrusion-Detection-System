@@ -6,6 +6,9 @@ import numpy as np
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Absolute path to the directory containing app.py — works regardless of CWD
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 app = Flask(__name__)
 
 # ── Model loading (joblib preferred, pickle fallback) ─────────────────────────
@@ -16,20 +19,28 @@ def _load_models():
     global model, label_encoder
     try:
         import joblib
-        if os.path.exists("model/model.joblib"):
-            model         = joblib.load("model/model.joblib")
-            label_encoder = joblib.load("model/label_encoder.joblib")
+        jl_model = os.path.join(BASE_DIR, "model", "model.joblib")
+        jl_enc   = os.path.join(BASE_DIR, "model", "label_encoder.joblib")
+        logger.info(f"Looking for model at: {jl_model}")
+        if os.path.exists(jl_model):
+            model         = joblib.load(jl_model)
+            label_encoder = joblib.load(jl_enc)
             logger.info("✅ Model loaded via joblib")
             return
+        else:
+            logger.warning(f"joblib model not found at {jl_model}")
     except Exception as e:
         logger.warning(f"joblib load failed: {e}")
 
     # Fallback: legacy pickle files
     try:
         import pickle
-        with open("model/model.pkl", "rb") as f:
+        pkl_model = os.path.join(BASE_DIR, "model", "model.pkl")
+        pkl_enc   = os.path.join(BASE_DIR, "model", "label_encoder.pkl")
+        logger.info(f"Trying pickle fallback at: {pkl_model}")
+        with open(pkl_model, "rb") as f:
             model = pickle.load(f)
-        with open("model/label_encoder.pkl", "rb") as f:
+        with open(pkl_enc, "rb") as f:
             label_encoder = pickle.load(f)
         logger.info("✅ Model loaded via pickle (legacy)")
     except Exception as e:
