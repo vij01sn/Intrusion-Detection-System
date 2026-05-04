@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Intrusion Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-border);
+            animation: popIn 0.4s ease-out;
+        }
+
+        .result-box.attack {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .result-box.normal {
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .result-box.error {
+            color: #eab308;
+            border-color: rgba(234, 179, 8, 0.3);
+            background: rgba(234, 179, 8, 0.1);
+        }
+
+        /* Abstract Background Elements */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: #4f46e5;
+            border-radius: 50%;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: #db2777;
+            border-radius: 50%;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="container">
+        <div class="glass-card">
+            <div class="header">
+                <h1>Network Sentinel</h1>
+                <p>AI-Powered Intrusion Detection System</p>
+            </div>
+
+            <form action="/predict" method="post">
+                <div class="form-group">
+                    <label for="duration">Connection Duration</label>
+                    <input type="number" step="any" id="duration" name="duration" class="form-control" placeholder="e.g. 0.0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="src_bytes">Source Bytes</label>
+                    <input type="number" step="any" id="src_bytes" name="src_bytes" class="form-control" placeholder="e.g. 491" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dst_bytes">Destination Bytes</label>
+                    <input type="number" step="any" id="dst_bytes" name="dst_bytes" class="form-control" placeholder="e.g. 0" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Analyze Traffic</button>
+            </form>
+
+            {% if prediction_text %}
+            <div class="result-box 
+                {% if 'Attack' in prediction_text %}attack
+                {% elif 'Normal' in prediction_text %}normal
+                {% else %}error{% endif %}">
+                {{ prediction_text }}
+            </div>
+            
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+                <a href="/graph" class="btn-submit" style="text-align: center; text-decoration: none; background: rgba(255,255,255,0.1); border: 1px solid var(--surface-border); flex: 1;">📊 View Attack Graph</a>
+                <a href="/eda" class="btn-submit" style="text-align: center; text-decoration: none; background: rgba(255,255,255,0.1); border: 1px solid var(--surface-border); flex: 1;">📈 View Full EDA</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
