@@ -7,12 +7,9 @@ env/
 __pycache__/
 *.pyc
 
-# Data & Models (Too large for GitHub)
+# Data (Too large for GitHub)
 KDDTrain+.txt
 *.csv
-model/model.pkl
-model/encoders.pkl
-model/label_encoder.pkl
 
 # IDE / System files
 .DS_Store
