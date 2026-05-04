@@ -13,5 +13,5 @@ COPY . .
 # Expose port (Render sets this dynamically via the PORT environment variable)
 EXPOSE 5000
 
-# Run the Flask app using python
-CMD ["python", "app.py"]
+# Run the Flask app using gunicorn for production
+CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000}
