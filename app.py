@@ -5,8 +5,19 @@ import pickle
 
 app = Flask(__name__)
 
-model = pickle.load(open("model/model.pkl","rb"))
-label_encoder = pickle.load(open("model/label_encoder.pkl","rb"))
+try:
+    model = pickle.load(open("model/model.pkl", "rb"))
+    label_encoder = pickle.load(open("model/label_encoder.pkl", "rb"))
+    print("✅ Model loaded successfully")
+except Exception as e:
+    model = None
+    label_encoder = None
+    print(f"❌ Model loading failed: {e}")
+
+@app.route('/health')
+def health():
+    status = "ok" if model is not None else "model_load_failed"
+    return {"status": status}, 200
 
 @app.route('/')
 def home():
@@ -14,6 +25,8 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    if model is None:
+        return render_template("index.html", prediction_text="⚠️ Model not loaded. Check server logs.")
 
     duration = float(request.form['duration'])
     src_bytes = float(request.form['src_bytes'])
