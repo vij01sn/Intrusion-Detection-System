@@ -68,12 +68,27 @@ def predict():
         return render_template("index.html",
                                prediction_text="⚠️ Model not loaded. Check server logs.")
     try:
+        import pandas as pd
         duration  = float(request.form['duration'])
         src_bytes = float(request.form['src_bytes'])
         dst_bytes = float(request.form['dst_bytes'])
 
-        # Model trained on 41 features; pad the remaining 38 with zeros
-        features = np.array([[duration, src_bytes, dst_bytes] + [0] * 38])
+        # KDD dataset columns (41 features, 'difficulty' dropped)
+        FEATURE_COLS = [
+            'duration','protocol_type','service','flag','src_bytes','dst_bytes',
+            'land','wrong_fragment','urgent','hot','num_failed_logins','logged_in',
+            'num_compromised','root_shell','su_attempted','num_root','num_file_creations',
+            'num_shells','num_access_files','num_outbound_cmds','is_host_login',
+            'is_guest_login','count','srv_count','serror_rate','srv_serror_rate',
+            'rerror_rate','srv_rerror_rate','same_srv_rate','diff_srv_rate',
+            'srv_diff_host_rate','dst_host_count','dst_host_srv_count',
+            'dst_host_same_srv_rate','dst_host_diff_srv_rate',
+            'dst_host_same_src_port_rate','dst_host_srv_diff_host_rate',
+            'dst_host_serror_rate','dst_host_srv_serror_rate',
+            'dst_host_rerror_rate','dst_host_srv_rerror_rate'
+        ]
+        values = [duration, src_bytes, dst_bytes] + [0] * 38
+        features = pd.DataFrame([values], columns=FEATURE_COLS)
 
         pred        = model.predict(features)
         attack_type = label_encoder.inverse_transform(pred)[0]
