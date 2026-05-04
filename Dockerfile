@@ -1,11 +1,17 @@
-FROM python:3.10
+FROM python:3.11-slim
 
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY . /app
+# Copy and install dependencies first (better Docker layer caching)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install -r requirements.txt
+# Copy all application files
+COPY . .
 
+# Render sets PORT dynamically; default to 5000 locally
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+# Run with Gunicorn (production-grade WSGI server)
+CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000}
