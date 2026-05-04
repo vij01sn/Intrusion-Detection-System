@@ -13,5 +13,5 @@ COPY . .
 # Render sets PORT dynamically; default to 5000 locally
 EXPOSE 5000
 
-# Run with Gunicorn (production-grade WSGI server)
-CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000}
+# Use shell form so $PORT env variable is properly expanded by Render
+CMD sh -c "gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120"

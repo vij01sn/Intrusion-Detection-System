@@ -34,7 +34,10 @@ def predict():
 
 @app.route('/eda')
 def eda():
-    return render_template("eda_report.html")
+    import os
+    if os.path.exists(os.path.join(app.template_folder, 'eda_report.html')):
+        return render_template("eda_report.html")
+    return "<h2 style='font-family:sans-serif;text-align:center;margin-top:50px'>EDA report not generated yet. Run generate_eda.py locally first.</h2>"
 
 @app.route('/graph')
 def graph():
