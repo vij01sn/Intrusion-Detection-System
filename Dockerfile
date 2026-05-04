@@ -1,17 +1,11 @@
-FROM python:3.11-slim
+FROM python:3.10
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY . /app
 
-# Copy all the application files to the container
-COPY . .
+RUN pip install -r requirements.txt
 
-# Expose port (Render sets this dynamically via the PORT environment variable)
 EXPOSE 5000
 
-# Run the Flask app using gunicorn for production
-CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000}
+CMD ["python", "app.py"]
